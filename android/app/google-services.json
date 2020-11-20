@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1026585068536",
+    "firebase_url": "https://chatbot-ojhm.firebaseio.com",
+    "project_id": "chatbot-ojhm",
+    "storage_bucket": "chatbot-ojhm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026585068536:android:907e7665d3e3293bc98c0d",
+        "android_client_info": {
+          "package_name": "com.example.chatbot_dialogflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCElxi4LCPfvRJzXXue_kTVKV3TPO5G_ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026585068536:android:46b8f524433741e7c98c0d",
+        "android_client_info": {
+          "package_name": "com.example.unscript_hackathon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCElxi4LCPfvRJzXXue_kTVKV3TPO5G_ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
