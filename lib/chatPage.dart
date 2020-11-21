@@ -2,6 +2,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:flutter_link_preview/flutter_link_preview.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 
 
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
@@ -220,35 +221,42 @@ class _ChatPageState extends State<ChatPage> {
                                 focusColor: Colors.black,
                                 hoverColor: Colors.black,
                                 border: new OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderRadius: BorderRadius.circular(50.0),
                                     borderSide: BorderSide(
-                                        width: 0, style: BorderStyle.none)),
+                                        width: 0.05, style: BorderStyle.solid)),
                                 hintText: 'Type your message',
                                 hintStyle: TextStyle(fontSize: 16.0)),
                           )),
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.0),
-                            child: IconButton(
-                                icon: Icon(
-                                  Icons.send,
-                                  size: 30.0,
-                                  color: Color.fromARGB(255, 253, 188, 51),
-                                ),
-                                onPressed: () {
-                                  if (messageInsert.text.isEmpty) {
-                                    print("empty message");
-                                  } else {
-                                    setState(() {
-                                      messsages.insert(0, {
-                                        "data": 1,
-                                        "message": messageInsert.text
+                              margin: EdgeInsets.symmetric(horizontal: 4.0),
+                              //
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.send,
+                                    size: 30.0,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    if (messageInsert.text.isEmpty) {
+                                      print("empty message");
+                                      // Fluttertoast.showToast(
+                                      //     msg: "Message can't be empty");
+                                    } else {
+                                      setState(() {
+                                        messsages.insert(0, {
+                                          "data": 1,
+                                          "message": messageInsert.text
+                                        });
                                       });
-                                    });
-                                    response(messageInsert.text);
-                                    messageInsert.clear();
-                                  }
-                                }),
-                          )
+                                      response(messageInsert.text);
+                                      messageInsert.clear();
+                                    }
+                                  }),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 253, 188, 51),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                              ))
                         ],
                       ),
                     ),
