@@ -76,6 +76,9 @@ class _ChatPageState extends State<ChatPage> {
 
   final messageInsert = TextEditingController();
   List<Map> messsages = List();
+  String startPageText =
+      'Hi, I\'m here to assist you \n with your queries on our college. \n Ask me questions or \n tap on one of these to start me:';
+  String prompt1 = '';
 
   @override
   Widget build(BuildContext context) {
@@ -95,15 +98,38 @@ class _ChatPageState extends State<ChatPage> {
                 child: Column(
                   children: <Widget>[
                     Flexible(
-                        child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            reverse: true,
-                            itemCount: messsages.length,
-                            itemBuilder: (context, index) {
-                              return chat(
-                                  messsages[index]["message"].toString(),
-                                  messsages[index]["data"]);
-                            })),
+                        child: messsages.isEmpty
+                            ? Container(
+                                child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    startPageText,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  GestureDetector(
+                                    child: Text(
+                                      'Where is the college located?',
+                                    ),
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                  )
+                                ],
+                              ))
+                            : ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                reverse: true,
+                                itemCount: messsages.length,
+                                itemBuilder: (context, index) {
+                                  return chat(
+                                      messsages[index]["message"].toString(),
+                                      messsages[index]["data"]);
+                                })),
                     Divider(
                       height: 5.0,
                       color: Colors.deepOrange,
@@ -114,10 +140,11 @@ class _ChatPageState extends State<ChatPage> {
                       child: Row(
                         children: <Widget>[
                           Flexible(
-                              child: TextField(
+                              child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: messageInsert,
                             decoration: InputDecoration.collapsed(
-                                hintText: "Send your message",
+                                hintText: prompt1,
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0)),
