@@ -1,7 +1,8 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_link_preview/flutter_link_preview.dart';
+
 import "package:fzregex/fzregex.dart";
 import 'package:fzregex/utils/pattern.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
@@ -13,7 +14,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final FlutterTts flutterTts = FlutterTts();
   bool showAlertDialog = true, hasLink = false;
   String res = "";
   @override
@@ -76,6 +76,9 @@ class _ChatPageState extends State<ChatPage> {
 
   final messageInsert = TextEditingController();
   List<Map> messsages = List();
+  String startPageText =
+      'Hi, I\'m here to assist you \n with your queries on our college. \n Ask me questions or \n tap on one of these to start me:';
+  String prompt1 = '';
 
   @override
   Widget build(BuildContext context) {
@@ -88,22 +91,45 @@ class _ChatPageState extends State<ChatPage> {
                 title: Text(
                   "Fr.Conceicao Rodrigues College Bot",
                 ),
-                backgroundColor: Colors.deepOrange,
+                backgroundColor: Color.fromARGB(255, 253, 188, 51),
                 automaticallyImplyLeading: false,
               ),
               body: Container(
                 child: Column(
                   children: <Widget>[
                     Flexible(
-                        child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            reverse: true,
-                            itemCount: messsages.length,
-                            itemBuilder: (context, index) {
-                              return chat(
-                                  messsages[index]["message"].toString(),
-                                  messsages[index]["data"]);
-                            })),
+                        child: messsages.isEmpty
+                            ? Container(
+                                child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    startPageText,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  GestureDetector(
+                                    child: Text(
+                                      'Where is the college located?',
+                                    ),
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                  )
+                                ],
+                              ))
+                            : ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                reverse: true,
+                                itemCount: messsages.length,
+                                itemBuilder: (context, index) {
+                                  return chat(
+                                      messsages[index]["message"].toString(),
+                                      messsages[index]["data"]);
+                                })),
                     Divider(
                       height: 5.0,
                       color: Colors.deepOrange,
@@ -114,10 +140,11 @@ class _ChatPageState extends State<ChatPage> {
                       child: Row(
                         children: <Widget>[
                           Flexible(
-                              child: TextField(
+                              child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: messageInsert,
                             decoration: InputDecoration.collapsed(
-                                hintText: "Send your message",
+                                hintText: prompt1,
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0)),
@@ -128,7 +155,7 @@ class _ChatPageState extends State<ChatPage> {
                                 icon: Icon(
                                   Icons.send,
                                   size: 30.0,
-                                  color: Colors.deepOrange,
+                                  color: Color.fromARGB(255, 253, 188, 51),
                                 ),
                                 onPressed: () {
                                   if (messageInsert.text.isEmpty) {
@@ -181,12 +208,13 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget chat(String message, int data) {
     // print("message - $message");
-    RegExp regExp = new RegExp(
-      r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
-      caseSensitive: false,
-      multiLine: true,
-    );
-    
+    // RegExp regExp = new RegExp(
+    //   r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+    //   caseSensitive: false,
+    //   multiLine: true,
+    // );
+    // String link2 = regExp.firstMatch(message).group(0);
+    // print('link2' + link2);
 
     // speak(res);
     return Padding(
@@ -212,50 +240,59 @@ class _ChatPageState extends State<ChatPage> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    // Flexible(
-                    //   child: ParsedText(
-                    //     text: message,
-                    //     parse: [
-                    //       MatchText(
-                    //           type: ParsedType.URL,
-                    //           style: TextStyle(
-                    //               color: Colors.blue,
-                    //               decoration: TextDecoration.underline),
-                    //           onTap: (url) async {
-                    //             print('url ${url.toString()}');
-                    //             if (await canLaunch(url)) {
-                    //               await launch(url);
-                    //             } else {
-                    //               await launch("mailto:" + url);
-                    //             }
+                    Flexible(
+                      child: ParsedText(
+                        text: message,
+                        parse: [
+                          MatchText(
+                              type: ParsedType.URL,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              onTap: (url) async {
+                                print('url ${url.toString()}');
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  await launch("mailto:" + url);
+                                }
 
-                    //             print('launch');
-                    //           }),
-                    //       MatchText(
-                    //           type: ParsedType.PHONE,
-                    //           style: TextStyle(
-                    //               color: Colors.blue,
-                    //               decoration: TextDecoration.underline),
-                    //           onTap: (url) async {
-                    //             print('mob' + url.toString());
+                                print('launch');
+                              }),
+                          MatchText(
+                              type: ParsedType.PHONE,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              onTap: (url) async {
+                                print('mob' + url.toString());
 
-                    //             await launch("tel:" + url);
+                                await launch("tel:" + url);
 
-                    //             print(url);
-                    //           }),
-                    //       MatchText(
-                    //           type: ParsedType.EMAIL,
-                    //           onTap: (url) async {
-                    //             await launch("mailto:" + url);
-                    //           })
-                    //     ],
-                    //     style: TextStyle(
-                    //         color: Colors.white, fontWeight: FontWeight.bold),
-                    //   ),
-                    // ),
+                                print(url);
+                              }),
+                          MatchText(
+                              type: ParsedType.EMAIL,
+                              onTap: (url) async {
+                                await launch("mailto:" + url);
+                              })
+                        ],
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                 ),
-                Text(regExp.hasMatch(message)?"has link":"no link")
+                // Container(
+                //     child: regExp.hasMatch(message)
+                //         ? FlutterLinkPreview(
+                //             url: regExp.firstMatch(message).group(0),
+                //             titleStyle: TextStyle(
+                //               color: Colors.blue,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           )
+                //         : Text('no link'))
               ],
             ),
           )),
