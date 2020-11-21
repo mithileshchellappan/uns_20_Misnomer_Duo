@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:flutter_link_preview/flutter_link_preview.dart';
 
-import "package:fzregex/fzregex.dart";
-import 'package:fzregex/utils/pattern.dart';
+
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,9 +12,20 @@ class ChatPage extends StatefulWidget {
   _ChatPageState createState() => _ChatPageState();
 }
 
+class Role {
+  String role;
+  Role(this.role);
+}
+
+class POV {
+  String pov;
+  POV(this.pov);
+}
+
 class _ChatPageState extends State<ChatPage> {
   bool showAlertDialog = true, hasLink = false;
   String res = "";
+  final userForm = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -82,6 +92,20 @@ class _ChatPageState extends State<ChatPage> {
   String prompt2 = 'What are the UG courses offered?';
   String prompt3 = 'Who is the principal of the college?';
 
+  List<Role> roles = [
+    Role("Parent"),
+    Role('Student'),
+    Role("Faculty"),
+    Role("Other")
+  ];
+  Role selectedRole;
+
+  List<POV> pov = [
+    POV("Know about FRCRCE"),
+    POV("Know about our Courses"),
+    POV("Know about Placements")
+  ];
+  POV selectedPOV;
   @override
   Widget build(BuildContext context) {
     return showAlertDialog
@@ -177,6 +201,7 @@ class _ChatPageState extends State<ChatPage> {
                                 reverse: true,
                                 itemCount: messsages.length,
                                 itemBuilder: (context, index) {
+                                  
                                   return chat(
                                       messsages[index]["message"].toString(),
                                       messsages[index]["data"]);
@@ -238,26 +263,120 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   alertDialog() {
-    return Scaffold(
-      body: Visibility(
-          visible: showAlertDialog,
-          child: Center(
-            child: AlertDialog(
-              content: Text("hi"),
-              actions: [
-                FlatButton(
-                    child: Text("OK"),
-                    onPressed: () {
+    return Visibility(
+        visible: showAlertDialog,
+        child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Padding(
+            padding: EdgeInsets.all(8),
+            child: FloatingActionButton.extended(
+                onPressed: () {
+                  final form = userForm.currentState;
+                  if (form.validate()) {
+                    form.save();
+                    if (!(selectedPOV == null || selectedRole == null)) {
                       setState(() {
                         showAlertDialog = false;
                       });
-                    })
-              ],
-            ),
+                    }
+                  }
+                },
+                label: Icon(Icons.arrow_right)),
+          ),
+          body: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Welcome"),
+              Form(
+                key: userForm,
+                child: Column(
+                  children: [
+                    textField("Name"),
+                    textField("Phone"),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: DropdownButton<Role>(
+                          isExpanded: true,
+                          hint: Text("Choose Role"),
+                          value: selectedRole,
+                          onChanged: (Role val) {
+                            setState(() {
+                              selectedRole = val;
+                            });
+                          },
+                          items: roles.map((Role role) {
+                            return DropdownMenuItem<Role>(
+                                value: role,
+                                child: Row(
+                                  children: [Text(role.role)],
+                                ));
+                          }).toList()),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: DropdownButton<POV>(
+                          isExpanded: true,
+                          hint: Text("Choose Purpose of Visit"),
+                          value: selectedPOV,
+                          onChanged: (POV val) {
+                            setState(() {
+                              selectedPOV = val;
+                            });
+                          },
+                          items: pov.map((POV pov) {
+                            return DropdownMenuItem<POV>(
+                                value: pov,
+                                child: Row(
+                                  children: [Text(pov.pov)],
+                                ));
+                          }).toList()),
+                    )
+                  ],
+                ),
+              )
+            ],
           )),
+        ));
+  }
+
+  textField(String label) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: TextFormField(
+        cursorColor: Colors.black,
+        style: TextStyle(color: Colors.black, fontSize: 20),
+        validator: (input) {
+          if (input == "") {
+            return "Cannot be empty";
+          }
+          return null;
+        },
+        keyboardType:
+            label == "Phone" ? TextInputType.phone : TextInputType.text,
+        decoration: InputDecoration(
+            enabledBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.black, width: 1.0),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            labelText: label,
+            errorStyle: TextStyle(color: Colors.red, fontSize: 15),
+            labelStyle: TextStyle(
+              color: Colors.black,
+            ),
+            hoverColor: Colors.black,
+            floatingLabelBehavior: FloatingLabelBehavior.never),
+        // onSaved: (value) => _email = value,
+        onChanged: (value) {},
+      ),
     );
   }
 
+  
   Widget chat(String message, int data) {
     print("message - $message");
     RegExp regExp = new RegExp(
