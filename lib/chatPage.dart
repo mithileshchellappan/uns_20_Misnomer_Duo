@@ -178,20 +178,22 @@ class _ChatPageState extends State<ChatPage> {
                                       messsages[index]["message"].toString(),
                                       messsages[index]["data"]);
                                 })),
-                    Divider(
-                      height: 5.0,
-                      color: Colors.deepOrange,
-                    ),
                     Container(
                       padding: EdgeInsets.only(left: 15.0, right: 15.0),
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
                         children: <Widget>[
                           Flexible(
-                              child: TextFormField(
+                              child: TextField(
                             textCapitalization: TextCapitalization.sentences,
                             controller: messageInsert,
-                            decoration: InputDecoration.collapsed(
+                            decoration: InputDecoration(
+                                fillColor: Colors.black,
+                                hoverColor: Colors.black,
+                                border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderSide: BorderSide(
+                                        width: 0, style: BorderStyle.none)),
                                 hintText: 'Type your message',
                                 hintStyle: TextStyle(fontSize: 16.0)),
                           )),
@@ -259,8 +261,11 @@ class _ChatPageState extends State<ChatPage> {
       caseSensitive: false,
       multiLine: true,
     );
+    String remMes = message;
     if (regExp.hasMatch(message)) {
       String link2 = regExp.firstMatch(message).group(0);
+      remMes = message.replaceFirst(link2, '');
+      print('remmes $remMes');
       print('link2' + link2);
     }
 
@@ -289,7 +294,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     Flexible(
                       child: ParsedText(
-                        text: message,
+                        text: remMes,
                         parse: [
                           MatchText(
                               type: ParsedType.URL,
@@ -325,6 +330,7 @@ class _ChatPageState extends State<ChatPage> {
                               })
                         ],
                         style: TextStyle(
+                          fontSize: 14,
                           color: Colors.black,
                         ),
                       ),
