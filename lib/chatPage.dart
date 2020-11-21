@@ -30,7 +30,7 @@ class _ChatPageState extends State<ChatPage> {
               content: Builder(
                 builder: (context) {
                   return Container(
-                      height: 200,
+                      // height: 200,
                       width: 200,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
