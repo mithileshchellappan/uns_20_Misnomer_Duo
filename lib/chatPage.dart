@@ -1,6 +1,9 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import "package:fzregex/fzregex.dart";
+import 'package:fzregex/utils/pattern.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -8,6 +11,9 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final FlutterTts flutterTts = FlutterTts();
+  bool showAlertDialog = true, hasLink = false;
+  String res = "";
   void response(query) async {
     AuthGoogle authGoogle = await AuthGoogle(
             fileJson: "assets/cupcakesbot-qlrcih-9c82160e9e70.json")
@@ -20,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
         "data": 0,
         "message": aiResponse.getListMessage()[0]["text"]["text"][0].toString()
       });
+      res = aiResponse.getListMessage()[0]["text"]["text"][0].toString();
     });
   }
 
@@ -28,88 +35,116 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Fr.Conceicao Rodrigues College Bot",
-          ),
-          backgroundColor: Colors.deepOrange,
-          automaticallyImplyLeading: false,
-        ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      reverse: true,
-                      itemCount: messsages.length,
-                      itemBuilder: (context, index) => chat(
-                          messsages[index]["message"].toString(),
-                          messsages[index]["data"]))),
-              Divider(
-                height: 5.0,
-                color: Colors.deepOrange,
+    return showAlertDialog
+        ? alertDialog()
+        : WillPopScope(
+            onWillPop: () async => false,
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  "Fr.Conceicao Rodrigues College Bot",
+                ),
+                backgroundColor: Colors.deepOrange,
+                automaticallyImplyLeading: false,
               ),
-              Container(
-                padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
+              body: Container(
+                child: Column(
                   children: <Widget>[
                     Flexible(
-                        child: TextField(
-                      controller: messageInsert,
-                      decoration: InputDecoration.collapsed(
-                          hintText: "Send your message",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0)),
-                    )),
+                        child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            reverse: true,
+                            itemCount: messsages.length,
+                            itemBuilder: (context, index) {
+                              return chat(
+                                  messsages[index]["message"].toString(),
+                                  messsages[index]["data"]);
+                            })),
+                    Divider(
+                      height: 5.0,
+                      color: Colors.deepOrange,
+                    ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 4.0),
-                      child: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            size: 30.0,
-                            color: Colors.deepOrange,
-                          ),
-                          onPressed: () {
-                            if (messageInsert.text.isEmpty) {
-                              print("empty message");
-                            } else {
-                              setState(() {
-                                messsages.insert(0,
-                                    {"data": 1, "message": messageInsert.text});
-                              });
-                              response(messageInsert.text);
-                              messageInsert.clear();
-                            }
-                          }),
+                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Flexible(
+                              child: TextField(
+                            controller: messageInsert,
+                            decoration: InputDecoration.collapsed(
+                                hintText: "Send your message",
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0)),
+                          )),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4.0),
+                            child: IconButton(
+                                icon: Icon(
+                                  Icons.send,
+                                  size: 30.0,
+                                  color: Colors.deepOrange,
+                                ),
+                                onPressed: () {
+                                  if (messageInsert.text.isEmpty) {
+                                    print("empty message");
+                                  } else {
+                                    setState(() {
+                                      messsages.insert(0, {
+                                        "data": 1,
+                                        "message": messageInsert.text
+                                      });
+                                    });
+                                    response(messageInsert.text);
+                                    messageInsert.clear();
+                                  }
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
                     )
                   ],
                 ),
               ),
-              SizedBox(
-                height: 15.0,
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+  }
+
+  alertDialog() {
+    return Scaffold(
+      body: Visibility(
+          visible: showAlertDialog,
+          child: Center(
+            child: AlertDialog(
+              content: Text("hi"),
+              actions: [
+                FlatButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      setState(() {
+                        showAlertDialog = false;
+                      });
+                    })
+              ],
+            ),
+          )),
     );
   }
 
-  //for better one i have use the bubble package check out the pubspec.yaml
-
   Widget chat(String message, int data) {
-    bool hasALink = false;
+    // print("message - $message");
     RegExp regExp = new RegExp(
-      r"^((ftp|http|https)://)?(www.)?(?!.(ftp|http|https|www.))[a-zA-Z0-9_-]+(.[a-zA-Z]+)+((/)[\w#]+)(/\w+?[a-zA-Z0-9]+=\w+(&[a-zA-Z0-9]+=\w+)*)?$",
+      r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
       caseSensitive: false,
-      multiLine: false,
+      multiLine: true,
     );
-    print("hasMatch : " + regExp.hasMatch(message).toString());
+    
+
+    // speak(res);
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Bubble(
@@ -142,11 +177,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   ],
                 ),
-                hasALink
-                    ? Text('HasLink')
-                    : Container(
-                        width: 0,
-                      )
+                Text(regExp.hasMatch(message)?"has link":"no link")
               ],
             ),
           )),

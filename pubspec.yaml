@@ -34,7 +34,8 @@ dependencies:
   firebase_auth: ^0.18.3
   cloud_firestore: ^0.14.3
   pin_entry_text_field: ^0.1.4
-
+  flutter_tts : ^1.3.0
+  fzregex: ^1.0.3 
 dev_dependencies:
   flutter_test:
     sdk: flutter
