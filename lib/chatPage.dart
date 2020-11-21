@@ -164,7 +164,7 @@ class _ChatPageState extends State<ChatPage> {
                                   decoration: TextDecoration.underline),
                               onTap: (url) async {
                                 print('url ${url.toString()}');
-                                contactif (await canLaunch(url)) {
+                                if (await canLaunch(url)) {
                                   await launch(url);
                                 } else {
                                   await launch("mailto:" + url);
@@ -174,10 +174,14 @@ class _ChatPageState extends State<ChatPage> {
                               }),
                           MatchText(
                               type: ParsedType.PHONE,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
                               onTap: (url) async {
-                                if (await canLaunch(url)) {
-                                  await launch("tel:" + url);
-                                }
+                                print('mob' + url.toString());
+
+                                await launch("tel:" + url);
+
                                 print(url);
                               }),
                           MatchText(
