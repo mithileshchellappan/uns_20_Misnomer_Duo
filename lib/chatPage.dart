@@ -10,6 +10,49 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  bool showAlertDialog = true;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  dialogShow() {
+    return showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 200,
+                      width: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                              child: Text(
+                            'label',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: "Montserrat"),
+                          )),
+                        ],
+                      ));
+                },
+              ),
+              actions: [
+                FlatButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    setState(() {
+                      showAlertDialog = false;
+                    });
+                  },
+                ),
+              ],
+            ));
+  }
+
   void response(query) async {
     AuthGoogle authGoogle = await AuthGoogle(
             fileJson: "assets/cupcakesbot-qlrcih-9c82160e9e70.json")
@@ -43,6 +86,10 @@ class _ChatPageState extends State<ChatPage> {
         body: Container(
           child: Column(
             children: <Widget>[
+              // Visibility(
+              //   child: dialogShow(),
+              //   visible: showAlertDialog,
+              // ),
               Flexible(
                   child: ListView.builder(
                       physics: BouncingScrollPhysics(),
@@ -206,6 +253,4 @@ class _ChatPageState extends State<ChatPage> {
           )),
     );
   }
-
-  void _launchUrl(url) {}
 }
