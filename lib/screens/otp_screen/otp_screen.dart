@@ -50,6 +50,7 @@ class _OtpScreenState extends State<OtpScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -188,7 +189,7 @@ class _OtpScreenState extends State<OtpScreen> {
         smsCode: smsOTP,
       );
       final UserCredential user = await _auth.signInWithCredential(credential);
-      final User currentUser =  _auth.currentUser;
+      final User currentUser = _auth.currentUser;
       assert(user.user.uid == currentUser.uid);
       Navigator.pushReplacementNamed(context, '/homeScreen');
     } catch (e) {

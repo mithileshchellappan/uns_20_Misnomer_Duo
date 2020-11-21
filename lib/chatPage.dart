@@ -1,7 +1,8 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_link_preview/flutter_link_preview.dart';
+
 import "package:fzregex/fzregex.dart";
 import 'package:fzregex/utils/pattern.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
@@ -13,7 +14,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final FlutterTts flutterTts = FlutterTts();
   bool showAlertDialog = true, hasLink = false;
   String res = "";
   @override
@@ -88,7 +88,7 @@ class _ChatPageState extends State<ChatPage> {
                 title: Text(
                   "Fr.Conceicao Rodrigues College Bot",
                 ),
-                backgroundColor: Colors.deepOrange,
+                backgroundColor: Color.fromARGB(255, 253, 188, 51),
                 automaticallyImplyLeading: false,
               ),
               body: Container(
@@ -128,7 +128,7 @@ class _ChatPageState extends State<ChatPage> {
                                 icon: Icon(
                                   Icons.send,
                                   size: 30.0,
-                                  color: Colors.deepOrange,
+                                  color: Color.fromARGB(255, 253, 188, 51),
                                 ),
                                 onPressed: () {
                                   if (messageInsert.text.isEmpty) {
@@ -181,12 +181,13 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget chat(String message, int data) {
     // print("message - $message");
-    RegExp regExp = new RegExp(
-      r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
-      caseSensitive: false,
-      multiLine: true,
-    );
-    
+    // RegExp regExp = new RegExp(
+    //   r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+    //   caseSensitive: false,
+    //   multiLine: true,
+    // );
+    // String link2 = regExp.firstMatch(message).group(0);
+    // print('link2' + link2);
 
     // speak(res);
     return Padding(
@@ -212,50 +213,59 @@ class _ChatPageState extends State<ChatPage> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    // Flexible(
-                    //   child: ParsedText(
-                    //     text: message,
-                    //     parse: [
-                    //       MatchText(
-                    //           type: ParsedType.URL,
-                    //           style: TextStyle(
-                    //               color: Colors.blue,
-                    //               decoration: TextDecoration.underline),
-                    //           onTap: (url) async {
-                    //             print('url ${url.toString()}');
-                    //             if (await canLaunch(url)) {
-                    //               await launch(url);
-                    //             } else {
-                    //               await launch("mailto:" + url);
-                    //             }
+                    Flexible(
+                      child: ParsedText(
+                        text: message,
+                        parse: [
+                          MatchText(
+                              type: ParsedType.URL,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              onTap: (url) async {
+                                print('url ${url.toString()}');
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  await launch("mailto:" + url);
+                                }
 
-                    //             print('launch');
-                    //           }),
-                    //       MatchText(
-                    //           type: ParsedType.PHONE,
-                    //           style: TextStyle(
-                    //               color: Colors.blue,
-                    //               decoration: TextDecoration.underline),
-                    //           onTap: (url) async {
-                    //             print('mob' + url.toString());
+                                print('launch');
+                              }),
+                          MatchText(
+                              type: ParsedType.PHONE,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              onTap: (url) async {
+                                print('mob' + url.toString());
 
-                    //             await launch("tel:" + url);
+                                await launch("tel:" + url);
 
-                    //             print(url);
-                    //           }),
-                    //       MatchText(
-                    //           type: ParsedType.EMAIL,
-                    //           onTap: (url) async {
-                    //             await launch("mailto:" + url);
-                    //           })
-                    //     ],
-                    //     style: TextStyle(
-                    //         color: Colors.white, fontWeight: FontWeight.bold),
-                    //   ),
-                    // ),
+                                print(url);
+                              }),
+                          MatchText(
+                              type: ParsedType.EMAIL,
+                              onTap: (url) async {
+                                await launch("mailto:" + url);
+                              })
+                        ],
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ],
                 ),
-                Text(regExp.hasMatch(message)?"has link":"no link")
+                // Container(
+                //     child: regExp.hasMatch(message)
+                //         ? FlutterLinkPreview(
+                //             url: regExp.firstMatch(message).group(0),
+                //             titleStyle: TextStyle(
+                //               color: Colors.blue,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           )
+                //         : Text('no link'))
               ],
             ),
           )),

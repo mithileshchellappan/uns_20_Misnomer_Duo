@@ -73,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -93,11 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: screenHeight * 0.05,
                 ),
-                Image.asset(
-                  'assets/images/registration.png',
-                  height: screenHeight * 0.3,
-                  fit: BoxFit.contain,
-                ),
+                //
                 SizedBox(
                   height: screenHeight * 0.02,
                 ),
