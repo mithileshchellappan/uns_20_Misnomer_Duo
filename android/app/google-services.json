@@ -44,6 +44,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "1026585068536-uq7qomhrd7hkbi7ufk1humqgqi23eaa6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.unscript_hackathon",
+            "certificate_hash": "c0dd4da59bc951b704f8f6de7c5e6c2427037a78"
+          }
+        },
+        {
+          "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCElxi4LCPfvRJzXXue_kTVKV3TPO5G_ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026585068536:android:0f763317a958c895c98c0d",
+        "android_client_info": {
+          "package_name": "com.fayaz07.flutter_firebase"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "1026585068536-bhqfk104vg51qnmkuiipt7s4iao0qf4v.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -66,4 +103,4 @@
     }
   ],
   "configuration_version": "1"
-}
+}9600532459805315
