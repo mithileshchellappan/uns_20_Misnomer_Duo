@@ -78,7 +78,7 @@ class _ChatPageState extends State<ChatPage> {
   List<Map> messsages = List();
   String startPageText =
       'Hi, I\'m here to assist you \n with your queries on our college. \n Ask me questions or \n tap on one of these to start me:';
-  String prompt1 = '';
+  String prompt1 = 'Ask me something.';
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,11 @@ class _ChatPageState extends State<ChatPage> {
                                       'Where is the college located?',
                                     ),
                                     onTap: () {
-                                      setState(() {});
+                                      setState(() {
+                                        prompt1 =
+                                            'Where is the college located?';
+                                        print("setstate - $prompt1");
+                                      });
                                     },
                                   )
                                 ],
@@ -142,8 +146,9 @@ class _ChatPageState extends State<ChatPage> {
                           Flexible(
                               child: TextFormField(
                             textCapitalization: TextCapitalization.sentences,
-                            controller: messageInsert,
-                            decoration: InputDecoration.collapsed(
+                            // controller: messageInsert,
+                            decoration: InputDecoration(
+                                labelText: "Send me a message",
                                 hintText: prompt1,
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
