@@ -77,8 +77,10 @@ class _ChatPageState extends State<ChatPage> {
   final messageInsert = TextEditingController();
   List<Map> messsages = List();
   String startPageText =
-      'Hi, I\'m here to assist you \n with your queries on our college. \n Ask me questions or \n tap on one of these to start me:';
-  String prompt1 = 'Ask me something.';
+      'Hi, I\'m here to assist you \n with your queries on our college. \n Ask me questions or \n tap on one of these:';
+  String prompt1 = 'Where is the college located?';
+  String prompt2 = 'What are the UG courses offered?';
+  String prompt3 = 'Who is the principal of the college?';
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,7 @@ class _ChatPageState extends State<ChatPage> {
         : WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
+              backgroundColor: Color(0xFFfafafa),
               appBar: AppBar(
                 title: Text(
                   "Fr.Conceicao Rodrigues College Bot",
@@ -104,6 +107,13 @@ class _ChatPageState extends State<ChatPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Image(
+                                    image: AssetImage('assets/bot.png'),
+                                    width: 130.0,
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
                                   Text(
                                     startPageText,
                                     textAlign: TextAlign.center,
@@ -111,15 +121,52 @@ class _ChatPageState extends State<ChatPage> {
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.w400),
                                   ),
+                                  SizedBox(
+                                    height: 15.0,
+                                  ),
                                   GestureDetector(
-                                    child: Text(
-                                      'Where is the college located?',
-                                    ),
+                                    child: Text(prompt1,
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.blue)),
+                                    onTap: () {
+                                      setState(() {
+                                        messageInsert.text = prompt1;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  GestureDetector(
+                                    child: Text(prompt2,
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.blue)),
                                     onTap: () {
                                       setState(() {
                                         prompt1 =
                                             'Where is the college located?';
                                         print("setstate - $prompt1");
+                                        messageInsert.text = prompt2;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  GestureDetector(
+                                    child: Text(prompt3,
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.blue)),
+                                    onTap: () {
+                                      print('tap');
+                                      setState(() {
+                                        messageInsert.text = prompt3;
                                       });
                                     },
                                   )
@@ -134,25 +181,25 @@ class _ChatPageState extends State<ChatPage> {
                                       messsages[index]["message"].toString(),
                                       messsages[index]["data"]);
                                 })),
-                    Divider(
-                      height: 5.0,
-                      color: Colors.deepOrange,
-                    ),
                     Container(
                       padding: EdgeInsets.only(left: 15.0, right: 15.0),
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
                         children: <Widget>[
                           Flexible(
-                              child: TextFormField(
+                              child: TextField(
                             textCapitalization: TextCapitalization.sentences,
-                            // controller: messageInsert,
+                            controller: messageInsert,
                             decoration: InputDecoration(
-                                labelText: "Send me a message",
-                                hintText: prompt1,
-                                hintStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0)),
+                                fillColor: Colors.black,
+                                focusColor: Colors.black,
+                                hoverColor: Colors.black,
+                                border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderSide: BorderSide(
+                                        width: 0, style: BorderStyle.none)),
+                                hintText: 'Type your message',
+                                hintStyle: TextStyle(fontSize: 16.0)),
                           )),
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -212,21 +259,25 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget chat(String message, int data) {
-    // print("message - $message");
-    // RegExp regExp = new RegExp(
-    //   r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
-    //   caseSensitive: false,
-    //   multiLine: true,
-    // );
-    // String link2 = regExp.firstMatch(message).group(0);
-    // print('link2' + link2);
+    print("message - $message");
+    RegExp regExp = new RegExp(
+      r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+      caseSensitive: false,
+      multiLine: true,
+    );
+    String remMes = message;
+    if (regExp.hasMatch(message)) {
+      String link2 = regExp.firstMatch(message).group(0);
+      remMes = message.replaceFirst(link2, '');
+      print('remmes $remMes');
+      print('link2' + link2);
+    }
 
-    // speak(res);
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Bubble(
           radius: Radius.circular(15.0),
-          color: data == 0 ? Colors.deepOrange : Colors.orangeAccent,
+          color: data == 0 ? Color(0xFFe8eaf6) : Color(0xFFe8f3fc),
           elevation: 0.0,
           alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
           nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
@@ -247,7 +298,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     Flexible(
                       child: ParsedText(
-                        text: message,
+                        text: remMes,
                         parse: [
                           MatchText(
                               type: ParsedType.URL,
@@ -283,21 +334,36 @@ class _ChatPageState extends State<ChatPage> {
                               })
                         ],
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                // Container(
-                //     child: regExp.hasMatch(message)
-                //         ? FlutterLinkPreview(
-                //             url: regExp.firstMatch(message).group(0),
-                //             titleStyle: TextStyle(
-                //               color: Colors.blue,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           )
-                //         : Text('no link'))
+                Container(
+                    child: regExp.hasMatch(message)
+                        ? Column(
+                            children: [
+                              Divider(),
+                              GestureDetector(
+                                onTap: () async {
+                                  await launch(
+                                      regExp.firstMatch(message).group(0));
+                                },
+                                child: FlutterLinkPreview(
+                                  url: regExp.firstMatch(message).group(0),
+                                  titleStyle: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ))
               ],
             ),
           )),
