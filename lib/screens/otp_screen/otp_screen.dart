@@ -63,17 +63,12 @@ class _OtpScreenState extends State<OtpScreen> {
                   height: screenHeight * 0.05,
                 ),
                 Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo.jpg',
                   width: screenWidth * 0.7,
                   fit: BoxFit.contain,
                 ),
                 SizedBox(
                   height: screenHeight * 0.05,
-                ),
-                Image.asset(
-                  'assets/images/varification.png',
-                  height: screenHeight * 0.3,
-                  fit: BoxFit.contain,
                 ),
                 SizedBox(
                   height: screenHeight * 0.02,
@@ -188,7 +183,7 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
     try {
-      final AuthCredential credential = PhoneAuthProvider.getCredential(
+      final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: smsOTP,
       );

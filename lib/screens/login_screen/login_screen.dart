@@ -60,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Firebase.initializeApp().whenComplete(() {
       print("completed");
@@ -87,8 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: screenHeight * 0.05,
                 ),
                 Image.asset(
-                  'assets/images/logo.png',
-                  width: screenWidth * 0.7,
+                  'assets/images/logo.jpg',
+                  width: screenWidth * 0.5,
                   fit: BoxFit.contain,
                 ),
                 SizedBox(
