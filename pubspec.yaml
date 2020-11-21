@@ -36,6 +36,10 @@ dependencies:
   pin_entry_text_field: ^0.1.4
   flutter_tts : ^1.3.0
   fzregex: ^1.0.3 
+  flutter_linkify: ^4.0.2
+  url_launcher: ^5.7.10
+  flutter_parsed_text: ^1.2.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

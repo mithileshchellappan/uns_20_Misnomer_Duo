@@ -13,7 +13,6 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: ChatPage(),
       routes: <String, WidgetBuilder>{
         '/otpScreen': (BuildContext ctx) => OtpScreen(),
-        '/homeScreen': (BuildContext ctx) => ChatPage(),
+        '/homeScreen': (BuildContext ctx) => LoginScreen(),
       },
     );
   }

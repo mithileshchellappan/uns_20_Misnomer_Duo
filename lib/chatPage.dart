@@ -4,6 +4,8 @@ import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import "package:fzregex/fzregex.dart";
 import 'package:fzregex/utils/pattern.dart';
+import 'package:flutter_parsed_text/flutter_parsed_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -14,6 +16,48 @@ class _ChatPageState extends State<ChatPage> {
   final FlutterTts flutterTts = FlutterTts();
   bool showAlertDialog = true, hasLink = false;
   String res = "";
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  dialogShow() {
+    return showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 200,
+                      width: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                              child: Text(
+                            'label',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: "Montserrat"),
+                          )),
+                        ],
+                      ));
+                },
+              ),
+              actions: [
+                FlatButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    setState(() {
+                      showAlertDialog = false;
+                    });
+                  },
+                ),
+              ],
+            ));
+  }
+
   void response(query) async {
     AuthGoogle authGoogle = await AuthGoogle(
             fileJson: "assets/cupcakesbot-qlrcih-9c82160e9e70.json")
@@ -168,13 +212,47 @@ class _ChatPageState extends State<ChatPage> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    Flexible(
-                      child: Text(
-                        message,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    // Flexible(
+                    //   child: ParsedText(
+                    //     text: message,
+                    //     parse: [
+                    //       MatchText(
+                    //           type: ParsedType.URL,
+                    //           style: TextStyle(
+                    //               color: Colors.blue,
+                    //               decoration: TextDecoration.underline),
+                    //           onTap: (url) async {
+                    //             print('url ${url.toString()}');
+                    //             if (await canLaunch(url)) {
+                    //               await launch(url);
+                    //             } else {
+                    //               await launch("mailto:" + url);
+                    //             }
+
+                    //             print('launch');
+                    //           }),
+                    //       MatchText(
+                    //           type: ParsedType.PHONE,
+                    //           style: TextStyle(
+                    //               color: Colors.blue,
+                    //               decoration: TextDecoration.underline),
+                    //           onTap: (url) async {
+                    //             print('mob' + url.toString());
+
+                    //             await launch("tel:" + url);
+
+                    //             print(url);
+                    //           }),
+                    //       MatchText(
+                    //           type: ParsedType.EMAIL,
+                    //           onTap: (url) async {
+                    //             await launch("mailto:" + url);
+                    //           })
+                    //     ],
+                    //     style: TextStyle(
+                    //         color: Colors.white, fontWeight: FontWeight.bold),
+                    //   ),
+                    // ),
                   ],
                 ),
                 Text(regExp.hasMatch(message)?"has link":"no link")
