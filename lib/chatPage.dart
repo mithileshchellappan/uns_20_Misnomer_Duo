@@ -148,6 +148,9 @@ class _ChatPageState extends State<ChatPage> {
                                             color: Colors.blue)),
                                     onTap: () {
                                       setState(() {
+                                        prompt1 =
+                                            'Where is the college located?';
+                                        print("setstate - $prompt1");
                                         messageInsert.text = prompt2;
                                       });
                                     },
@@ -190,6 +193,7 @@ class _ChatPageState extends State<ChatPage> {
                             controller: messageInsert,
                             decoration: InputDecoration(
                                 fillColor: Colors.black,
+                                focusColor: Colors.black,
                                 hoverColor: Colors.black,
                                 border: new OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
