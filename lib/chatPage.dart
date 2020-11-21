@@ -103,6 +103,13 @@ class _ChatPageState extends State<ChatPage> {
   //for better one i have use the bubble package check out the pubspec.yaml
 
   Widget chat(String message, int data) {
+    bool hasALink = false;
+    RegExp regExp = new RegExp(
+      r"^((ftp|http|https)://)?(www.)?(?!.(ftp|http|https|www.))[a-zA-Z0-9_-]+(.[a-zA-Z]+)+((/)[\w#]+)(/\w+?[a-zA-Z0-9]+=\w+(&[a-zA-Z0-9]+=\w+)*)?$",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    print("hasMatch : " + regExp.hasMatch(message).toString());
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Bubble(
@@ -113,22 +120,33 @@ class _ChatPageState extends State<ChatPage> {
           nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
           child: Padding(
             padding: EdgeInsets.all(2.0),
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                      data == 0 ? "assets/bot.png" : "assets/user.png"),
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: AssetImage(
+                          data == 0 ? "assets/bot.png" : "assets/user.png"),
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Flexible(
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                    child: Text(
-                  message,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ))
+                hasALink
+                    ? Text('HasLink')
+                    : Container(
+                        width: 0,
+                      )
               ],
             ),
           )),
