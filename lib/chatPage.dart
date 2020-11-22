@@ -289,7 +289,6 @@ class _ChatPageState extends State<ChatPage> {
                             .collection("users")
                             .add({
                           "name": name,
-                          "phone": phone,
                           "role": selectedRole.role,
                           "purposeOfVisit": selectedPOV.pov
                         });
@@ -315,7 +314,6 @@ class _ChatPageState extends State<ChatPage> {
                 child: Column(
                   children: [
                     textField("Name"),
-                    textField("Phone"),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: DropdownButton<Role>(
