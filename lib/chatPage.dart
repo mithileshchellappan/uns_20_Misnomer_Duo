@@ -1,9 +1,9 @@
 import 'package:bubble/bubble.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:flutter_link_preview/flutter_link_preview.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
-
 
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,7 +25,7 @@ class POV {
 
 class _ChatPageState extends State<ChatPage> {
   bool showAlertDialog = true, hasLink = false;
-  String res = "";
+  String name = "", phone = "";
   final userForm = GlobalKey<FormState>();
   @override
   void initState() {
@@ -81,7 +81,6 @@ class _ChatPageState extends State<ChatPage> {
         "data": 0,
         "message": aiResponse.getListMessage()[0]["text"]["text"][0].toString()
       });
-      res = aiResponse.getListMessage()[0]["text"]["text"][0].toString();
     });
   }
 
@@ -202,7 +201,6 @@ class _ChatPageState extends State<ChatPage> {
                                 reverse: true,
                                 itemCount: messsages.length,
                                 itemBuilder: (context, index) {
-                                  
                                   return chat(
                                       messsages[index]["message"].toString(),
                                       messsages[index]["data"]);
@@ -280,14 +278,27 @@ class _ChatPageState extends State<ChatPage> {
           floatingActionButton: Padding(
             padding: EdgeInsets.all(8),
             child: FloatingActionButton.extended(
-                onPressed: () {
+                onPressed: () async {
                   final form = userForm.currentState;
                   if (form.validate()) {
                     form.save();
                     if (!(selectedPOV == null || selectedRole == null)) {
-                      setState(() {
-                        showAlertDialog = false;
-                      });
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .add({
+                          "name": name,
+                          "phone": phone,
+                          "role": selectedRole.role,
+                          "purposeOfVisit": selectedPOV.pov
+                        });
+                        print("added to db");
+                        setState(() {
+                          showAlertDialog = false;
+                        });
+                      } catch (e) {
+                        print(e);
+                      }
                     }
                   }
                 },
@@ -297,7 +308,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Welcome"),
+              Text("Welcome", style: TextStyle(fontSize: 28)),
               Form(
                 key: userForm,
                 child: Column(
@@ -357,8 +368,16 @@ class _ChatPageState extends State<ChatPage> {
         cursorColor: Colors.black,
         style: TextStyle(color: Colors.black, fontSize: 20),
         validator: (input) {
-          if (input == "") {
-            return "Cannot be empty";
+          if (label == "Name") {
+            if (input == "") {
+              return "Cannot be empty";
+            }
+          }
+          if (label == "Phone") {
+            RegExp _numeric = RegExp(r'^-?[0-9]+$');
+            if (input.length != 10 || !_numeric.hasMatch(input)) {
+              return "Invalid Phone number";
+            }
           }
           return null;
         },
@@ -378,13 +397,21 @@ class _ChatPageState extends State<ChatPage> {
             ),
             hoverColor: Colors.black,
             floatingLabelBehavior: FloatingLabelBehavior.never),
-        // onSaved: (value) => _email = value,
-        onChanged: (value) {},
+        onChanged: (value) {
+          if (label == "Name") {
+            setState(() {
+              name = value;
+            });
+          } else {
+            setState(() {
+              phone = value;
+            });
+          }
+        },
       ),
     );
   }
 
-  
   Widget chat(String message, int data) {
     print("message - $message");
     RegExp regExp = new RegExp(

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:unscript_hackathon/admin_login.dart';
 
 import 'package:unscript_hackathon/screens/login_screen/widget/country_picker.dart';
 import 'package:unscript_hackathon/screens/login_screen/widget/custom_button.dart';
@@ -181,6 +182,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       CustomButton(clickOnLogin),
                     ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 14,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AdminLogin()));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    height: 45,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 253, 188, 51),
+                      borderRadius: BorderRadius.circular(36),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Privileges',
+                      style: TextStyle(color: Colors.black, fontSize: 16.0),
+                    ),
                   ),
                 )
               ],
