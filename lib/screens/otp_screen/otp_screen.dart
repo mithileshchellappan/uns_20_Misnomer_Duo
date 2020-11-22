@@ -124,8 +124,8 @@ class _OtpScreenState extends State<OtpScreen> {
                         height: screenHeight * 0.04,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          verifyOtp();
+                        onTap: () async {
+                          await verifyOtp();
                         },
                         child: Container(
                           margin: const EdgeInsets.all(8),
@@ -194,8 +194,7 @@ class _OtpScreenState extends State<OtpScreen> {
       Navigator.pushReplacementNamed(context, '/homeScreen');
     } catch (e) {
       handleError(e as PlatformException);
-      final snackBar = SnackBar(content: Text('Check your otp'));
-      Scaffold.of(context).showSnackBar(snackBar);
+      print("check your otp");
     }
   }
 
