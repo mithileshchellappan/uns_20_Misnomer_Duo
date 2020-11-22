@@ -113,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
         : WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
-              backgroundColor: Color(0xFFfafafa),
+              backgroundColor: Colors.white,
               appBar: AppBar(
                 title: Text(
                   "Fr.Conceicao Rodrigues College Bot",
@@ -278,7 +278,7 @@ class _ChatPageState extends State<ChatPage> {
           floatingActionButton: Padding(
             padding: EdgeInsets.all(8),
             child: FloatingActionButton.extended(
-              // backgroundColor: Colors.yellow,
+                backgroundColor: Color.fromARGB(255, 253, 188, 51),
                 onPressed: () async {
                   final form = userForm.currentState;
                   if (form.validate()) {

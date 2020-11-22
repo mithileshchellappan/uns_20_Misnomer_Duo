@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unscript_hackathon/chatPage.dart';
 
 import 'screens/login_screen/login_screen.dart';
@@ -8,6 +9,10 @@ import 'screens/otp_screen/otp_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   print('init');
   runApp(MyApp());
 }
