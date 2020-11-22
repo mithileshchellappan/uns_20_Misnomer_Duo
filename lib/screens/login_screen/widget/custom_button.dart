@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final clickOnLogin;
-
   // ignore: sort_constructors_first
   const CustomButton(this.clickOnLogin);
 
